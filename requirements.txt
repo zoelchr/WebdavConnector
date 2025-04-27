@@ -1,1 +1,4 @@
-python-dotenv>=1.1.0
+python-dotenv>=1.1.0 #
+
+pyinstaller>=6.13.0 # Aus dem Python-Programm wird eien ausführbare exe-Datei generiert, OHNE dass Python installiert sein muss.
+                     # pyinstaller --onefile --noconsole webdav_connector.py
