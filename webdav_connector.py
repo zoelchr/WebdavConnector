@@ -25,8 +25,6 @@ except AttributeError:
 if os.name == 'nt':
     os.system('chcp 65001')
 
-print("Hallo Welt – Umlaute: ä ö ü ß Ä Ö Ü")
-
 # WebDAV-Pfade laden
 def validate_env_file(filename):
     env_path = Path(filename)
