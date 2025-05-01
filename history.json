@@ -1,0 +1,38 @@
+[
+  {
+    "name": "SHAPTH_Intern",
+    "pfad": "\\\\sp-extranet.bayern.de@SSL\\DavWWWRoot\\lgl\\shapth\\DokumenteIntern",
+    "laufwerk": "O",
+    "use_login": false
+  },
+  {
+    "name": "SHAPTH_UAG",
+    "pfad": "\\\\sp-extranet.bayern.de@SSL\\DavWWWRoot\\lgl\\shapth\\DokumenteUAG",
+    "laufwerk": "N",
+    "use_login": false
+  },
+  {
+    "name": "SHAPTH_Kernprojekt",
+    "pfad": "\\\\sp-extranet.bayern.de@SSL\\DavWWWRoot\\lgl\\shapth\\DokumenteKernprojekt",
+    "laufwerk": "M",
+    "use_login": false
+  },
+  {
+    "name": "WAFA_Intern",
+    "pfad": "\\\\sp-extranet.bayern.de@SSL\\DavWWWRoot\\lgl\\twfa\\Dokumente LGLIntern",
+    "laufwerk": "R",
+    "use_login": false
+  },
+  {
+    "name": "WAFA_Steuerkreis",
+    "pfad": "\\\\sp-extranet.bayern.de@SSL\\DavWWWRoot\\lgl\\twfa\\DokumenteSteuerkreis",
+    "laufwerk": "Q",
+    "use_login": false
+  },
+  {
+    "name": "WAFA_Kernprojekt",
+    "pfad": "\\\\sp-extranet.bayern.de@SSL\\DavWWWRoot\\lgl\\twfa\\DokumenteKernprojekt",
+    "laufwerk": "P",
+    "use_login": false
+  }
+]

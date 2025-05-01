@@ -5,6 +5,7 @@ import subprocess
 import os
 import sys
 import json
+import re
 
 from pathlib import Path
 import locale
@@ -68,7 +69,8 @@ def save_history(config):
     with open(HISTORY_FILE, "w", encoding="utf-8") as f:
         json.dump(history, f, indent=2)
 
-def get_active_drives():
+
+def get_active_ssl_drives():
     result = subprocess.run(
         ["net", "use"],
         capture_output=True,
@@ -77,26 +79,27 @@ def get_active_drives():
         encoding=locale.getpreferredencoding(False),
         errors="replace"
     )
+    
     active = {}
     if result.stdout:
         lines = result.stdout.splitlines()
         for line in lines:
-            line = line.strip()
-            if line and ':' in line and ('\\' in line or '@SSL' in line):
-                parts = line.split()
-                if len(parts) >= 3 and parts[1].endswith(":"):
-                    laufwerk = parts[1][:-1]
-                    pfad = parts[2]
+            if '@SSL' in line:
+                # Beispielzeile: '    M:        \\\\sp-extranet.bayern.de@SSL\\...'
+                match = re.search(r"([A-Z]):\s+\\\\([^\s]+@SSL[^\s]*)", line, re.IGNORECASE)
+                if match:
+                    laufwerk = match.group(1)
+                    pfad = f"\\\\{match.group(2)}"
                     active[laufwerk] = pfad
     return active
 
 def freie_laufwerksbuchstaben():
     alle = {chr(i) for i in range(68, 91)}  # D-Z
-    belegt = set(get_active_drives().keys())
+    belegt = set(get_active_ssl_drives().keys())
     return sorted(alle - belegt)
 
 def verbinden(name, pfad, laufwerk, use_login_flag):
-    active_drives = get_active_drives()
+    active_drives = get_active_ssl_drives()
     if laufwerk in active_drives:
         messagebox.showerror("Fehler", f"Laufwerk {laufwerk}: ist bereits belegt!")
         return
@@ -123,7 +126,7 @@ def verbinden(name, pfad, laufwerk, use_login_flag):
         messagebox.showerror("Fehler", f"Verbindung zu {pfad} fehlgeschlagen!")
 
 def alle_verbindungen_trennen():
-    active = get_active_drives()
+    active = get_active_ssl_drives()
     if not active:
         messagebox.showinfo("Info", "Es sind keine aktiven Verbindungen vorhanden.")
         return
@@ -189,7 +192,7 @@ def verbindung_loeschen():
     for idx in reversed(selected_indices):
         eintrag = history[idx]
         laufwerk = eintrag.get("laufwerk")
-        active_drives = get_active_drives()
+        active_drives = get_active_ssl_drives()
         if laufwerk and laufwerk in active_drives:
             try:
                 subprocess.check_call(['net', 'use', f'{laufwerk}:', '/delete', '/yes'], shell=True)
@@ -233,7 +236,7 @@ def verbindung_deaktivieren():
     if not selected_indices:
         messagebox.showerror("Fehler", "Bitte eine oder mehrere Verbindungen auswählen!")
         return
-    active_drives = get_active_drives()
+    active_drives = get_active_ssl_drives()
     for idx in selected_indices:
         eintrag = history[idx]
         laufwerk = eintrag.get('laufwerk')
@@ -255,7 +258,8 @@ def refresh_history():
 def update_laufwerke():
     laufwerke_text.configure(state="normal")
     laufwerke_text.delete(1.0, tk.END)
-    active = get_active_drives()
+    #active = get_active_drives()
+    active = get_active_ssl_drives()
     for lw, pfad in active.items():
         laufwerke_text.insert(tk.END, f"{lw}: {pfad}\n")
     laufwerke_text.configure(state="disabled")
